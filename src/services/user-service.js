@@ -15,6 +15,28 @@ class UserService{
             const user=await this.userRepository.create(data);
             return user;
         }catch(error){
+            console.log("something went wrong in token creation ");
+            throw error;
+        }
+    }
+
+    async signIn(email,palinPassword){
+        try{
+            //step 1-> fetch the user using the email
+            const user=await this.userRepository.getByEmail(email);
+            //step 2->compare incommit plai password with stores encrypted password
+            const passwordMatch=this.checkPassword(palinPassword,user.password);
+            if(!passwordMatch){
+                console.log("password doesn't matach");
+                throw {error:'Incorrect password'}
+            }
+
+            console.log('this inside service layer',this);
+            const newJWT=this.createToken({email:user.email,id:user.id});
+            return newJWT;
+
+        }catch(error){
+            console.log("something went wrong in token creation ");
             throw error;
         }
     }
