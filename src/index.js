@@ -4,6 +4,8 @@ const apiRoutes=require('./routes/index');
 const bodyParser=require('body-parser');
 const UserService = require('./services/user-service.js');
 
+const db=require('./models/index');
+
 const app=express();
 
 
@@ -18,8 +20,13 @@ prepareAndStartServer=async()=>{
 
     console.log(PORT);
 
-    app.listen(PORT,()=>{
+    app.listen(PORT, ()=>{
         console.log("server is running on port",PORT)
+        console.log("hellwo",process.env.DB_SYNC);
+        if(process.env.DB_SYNC){
+            db.sequelize.sync({alert:true});
+            console.log("synced properly");
+        }
     })
 
     app.get("/",(req,res)=>{
@@ -30,9 +37,9 @@ prepareAndStartServer=async()=>{
    //console.log("User service",service.createToken);
    //const newToken=service.createToken({email:'sahebraoj1@gmail.com',id:1});
    //console.log("newToken is=",newToken);
-    const token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhaGVicmFvajFAZ21haWwuY29tIiwiaWQiOjEsImlhdCI6MTcyNDU3NDgzNywiZXhwIjoxNzI0NjYxMjM3fQ.-J3M2um3PVjF_CS-x4ffnanBNhSk7ZEqKE-kCFztgA0";
-   const response=service.verifyToken(token);
-   console.log(response);
+   // const token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhaGVicmFvajFAZ21haWwuY29tIiwiaWQiOjEsImlhdCI6MTcyNDU3NDgzNywiZXhwIjoxNzI0NjYxMjM3fQ.-J3M2um3PVjF_CS-x4ffnanBNhSk7ZEqKE-kCFztgA0";
+   //const response=service.verifyToken(token);
+   //console.log(response);
 }
 
 prepareAndStartServer();

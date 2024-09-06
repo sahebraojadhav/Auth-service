@@ -4,7 +4,7 @@ const bcrypt=require('bcrypt');
 const UserRepository=require('../repository/user-repository');
 const {JWT_KEY}=require('../config/serverConfig');
 const user = require('../models/user');
-
+const { response } = require('express');
 class UserService{
     constructor(){
         this.userRepository=new UserRepository();
@@ -41,6 +41,26 @@ class UserService{
         }
     }
 
+    async isAuthenticated(token){
+        try{
+            const response=this.verifyToken(token);
+            if(!response){
+                throw {error:'Invalid token'}
+            }
+
+            const user=await this.userRepository.getById(response.id)
+            if(!user){
+                throw {error:'No user with the corresponding token exists'};
+            }
+
+            return user.id;
+            
+        }catch(error){
+            console.log("something went wrong in token verification");
+            throw error;
+        }
+    }
+
     createToken(user){
         try{
             const result=jwt.sign(user,JWT_KEY,{expiresIn:'1d'});
@@ -53,6 +73,8 @@ class UserService{
 
     verifyToken(token){
         try{
+            console.log("------------------------------")
+            console.log(token,JWT_KEY)
             const response=jwt.verify(token,JWT_KEY);
             return response;
         }catch(error){   
