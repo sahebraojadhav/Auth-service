@@ -5,7 +5,9 @@ const userService=new UserService();
 
 const create=async (req,res)=>{
     try{
-        console.log(req.body);
+        //console.log(req.body);
+        console.log(req.body.email);
+        console.log(req.body.password);
         const response=await userService.create({
             email:req.body.email,
             password:req.body.password
@@ -18,11 +20,13 @@ const create=async (req,res)=>{
         })
     }catch(error){
         console.log(error);
-        return res.status(500).json({
-            message:"something went wrong at controller layer",
+        console.log("we are printing all the errors here guys husssssasin")
+        console.log(error);
+        return res.status(error.statusCode || 500).json({
+            message:error.message,
             data:{},
             success:false,
-            err:error
+            err:error.explanation
         })
     }
 }
@@ -71,7 +75,7 @@ const isAuthenticated=async(req,res)=>{
 
 const isAdmin=async(req,res)=>{
     try{
-        console.log("controllerssssssssssss",req.body.id);
+        //console.log("controllerssssssssssss",req.body.id);
         const response=await userService.isAdmin(req.body.id);
         return res.status(200).json({
             data:response,

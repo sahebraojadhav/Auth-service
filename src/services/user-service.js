@@ -5,6 +5,7 @@ const UserRepository=require('../repository/user-repository');
 const {JWT_KEY}=require('../config/serverConfig');
 const user = require('../models/user');
 const { response } = require('express');
+const AppErrors = require('../utils/error-handler');
 class UserService{
     constructor(){
         this.userRepository=new UserRepository();
@@ -15,8 +16,17 @@ class UserService{
             const user=await this.userRepository.create(data);
             return user;
         }catch(error){
+            if(error.name=== 'SequelizeValidationError')
+            {
+                throw error; 
+            }
             console.log("something went wrong in token creation ");
-            throw error;
+            throw new AppErrors(
+                'ServerError',
+                'Something went wrong in service',
+                'Logical Issue Found',
+                500
+            )
         }
     }
 
