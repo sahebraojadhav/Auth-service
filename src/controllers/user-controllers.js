@@ -26,7 +26,7 @@ const create=async (req,res)=>{
             message:error.message,
             data:{},
             success:false,
-            err:error.explanation
+            err:error.expalantion
         })
     }
 }
@@ -43,7 +43,7 @@ const signIn=async(req,res)=>{
     }catch(error){
         console.log(error);
         return res.status(500).json({
-            message:"something went wrong at controller layer",
+            message:error.message,
             data:{},
             success:false,
             err:error

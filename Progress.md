@@ -1,1 +1,4 @@
-from video no 13 1:13:00
+
+from video no 10 around 1:30:00
+
+check the chatgpt how we added new migration
